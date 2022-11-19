@@ -7,3 +7,8 @@ target_include_directories(MyMath
 )
 
 target_link_libraries(MyMath cppTest_compiler_flags)
+
+# lib instalation
+set(libs_to_install MyMath cppTest_compiler_flags)
+install(TARGETS ${libs_to_install} DESTINATION lib)
+install(FILES my_math.hpp DESTINATION include)

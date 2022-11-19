@@ -26,7 +26,7 @@ int main()
 
     #ifdef USE_MYMATH
     double sqroot = util::math::mySqrt(value);
-    std::cout << "Math do usuário" << std::endl;
+    std::cout << "Math do projeto" << std::endl;
     #else
     double sqroot = sqrt(value);
     std::cout << "Math std" << std::endl;

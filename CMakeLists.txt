@@ -37,3 +37,23 @@ target_include_directories(
     cppTest PUBLIC
     "${PROJECT_BINARY_DIR}/include" # adds the binary directory as a path to be serched for include files
 )
+
+
+# executable installation
+install(TARGETS cppTest DESTINATION bin)
+install(FILES "${PROJECT_BINARY_DIR}/include/config.hpp" DESTINATION include)
+
+#These tests only work if proper input is given, as for now main reads input from cin
+enable_testing()
+
+add_test(NAME Runs COMMAND cppTest)
+
+add_test(NAME Usage COMMAND cppTest)
+set_tests_properties(Usage 
+    PROPERTIES PASS_REGULAR_EXPRESSION "Versão brasileira"
+)
+
+add_test(NAME StandardUse COMMAND cppTest 4)
+set_tests_properties(StandardUse 
+    PROPERTIES PASS_REGULAR_EXPRESSION "aproximada: 2"
+)
