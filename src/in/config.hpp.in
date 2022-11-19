@@ -1,4 +1,4 @@
 #define VERSION_MAJOR @cppTest_VERSION_MAJOR@
 #define VERSION_MINOR @cppTest_VERSION_MINOR@
 
-#cmakedefine USE_MATH
+#cmakedefine USE_MYMATH

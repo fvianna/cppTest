@@ -1,31 +1,39 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.15)
 
 # set the project name and version
-project(cppTest VERSION 1.1.1)
+project(cppTest VERSION 0.1.1)
 
 # specify the C++ standard
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
+add_library(cppTest_compiler_flags INTERFACE)
+target_compile_features(cppTest_compiler_flags INTERFACE cxx_std_17)
 
-option(USE_MATH "Use non-default math implementation" OFF)
+# sets compiler flags according to the compiler that is being used and
+# only when using the BUILD_INTERFACE generator expression
+set(gcc_like_cxx "$<COMPILE_LANG_AND_ID:CXX,ARMClang,AppleClang,Clang,GNU,LCC>")
+set(msvc_cxx "$<COMPILE_LANG_AND_ID:CXX,MSVC>")
+
+target_compile_options(cppTest_compiler_flags INTERFACE
+    "$<${gcc_like_cxx}:$<BUILD_INTERFACE:-Wall;-Wextra;-Wshadow;-Wformat=2;-Wunused;-Werror>>"
+    "$<${msvc_cxx}:$<BUILD_INTERFACE:-W3;-WX>>"
+)
+
+option(USE_MYMATH "Use non-default math implementation" ON)
 
 # Makes configuration infos available to the source code
 configure_file(src/in/config.hpp.in include/config.hpp)
 
-if(USE_MATH)
+if(USE_MYMATH)
     # adds the math module
     add_subdirectory(src/math)
-    list(APPEND EXTRA_LIBS math)
-    list(APPEND EXTRA_INCLUDES "${PROJECT_SOURCE_DIR}/math")
+    list(APPEND EXTRA_LIBS MyMath)
 endif()
 
 # add executables to the project
 add_executable(cppTest src/main.cpp)
 
-target_link_libraries(cppTest PUBLIC ${EXTRA_LIBS})
+target_link_libraries(cppTest PUBLIC ${EXTRA_LIBS} cppTest_compiler_flags)
 
 target_include_directories(
     cppTest PUBLIC
     "${PROJECT_BINARY_DIR}/include" # adds the binary directory as a path to be serched for include files
-    ${EXTRA_INCLUDES}
 )
